@@ -1,0 +1,52 @@
+<html>
+
+<head>
+    <title>postMessage Demo</title>
+    <script src="http://libs.useso.com/js/json2/20130526/json2.min.js"></script>
+    <script src="../index.js"></script>
+    <style>
+    * {
+        font-size: 14px;
+        font-family: "微软雅黑", "黑体"
+    }
+    
+    iframe {
+        border: 1px solid #000;
+        width: 100%;
+        height: 300px;
+    }
+    </style>
+    <script>
+    function sendMsg(useJSON) {
+        var value = document.getElementById("msg").value;
+        var data = useJSON ? {
+            wrap: "json",
+            value: value,
+            arr: ["test", "array"],
+            cache: Math.random().toString(16).slice(2)
+        } : value;
+        PM.send(window.parent, "fromFrame", data);
+
+        document.getElementById("result").innerHTML = "send message:"+ JSON.stringify(data) +"<br>randKey: "+ Math.random().toString(16).slice(2);
+    }
+    PM.bind("test", function(v) {
+        document.getElementById("result").innerHTML = [
+            "receive message: " + JSON.stringify(v),
+            "randKey: " + Math.random().toString(16).slice(2)
+        ].join("<br>");
+    });
+    </script>
+</head>
+
+<body>
+    <script>
+    document.write('<h1>iframe地址：</h1><h2>' + document.URL + '</h2>')
+    </script>
+    <input id="msg" placeholder="请输入要发送的消息" />
+    <button onclick="sendMsg()">发送</button>
+    <button onclick="sendMsg(true)">发送JSON</button>
+    <div id="result">&nbsp;
+        <br>&nbsp;</div>
+</body>
+
+</html>
