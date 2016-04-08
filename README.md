@@ -43,9 +43,16 @@
 本组件不提供unbind接口以简化组件复杂度。有类似需求，请自行在handler中设置标志位来处理，或者自行分发消息通知。
 
 ## 兼容说明
+-----------
 
-在不支持 postMessage 的浏览器中（IE67），使用设置通讯窗口的 window.name 来传递json字符串（window.name可写不可读），并使用定时器检查本窗口的 window.name 是否被设置了消息。所以，消息传递将会出现延迟。
+postMessage的兼容情况已经非常赞了，但是只有IE是个拖油瓶，所有的兼容问题全在IE上：[Can I Use?](http://caniuse.com/#search=postMessage)
 
-## 传输量
+- IE6/7 不支持postMessage，通过轮询 window.name 模拟实现；
+- IE8/9 仅仅支持 iframe 形式的postMessage，其他形式(tabs/windows)不支持，并且不支持 object 类型数据传递；
+- IE10/11 仅仅支持 iframe 形式的postMessage，其他形式(tabs/windows)不支持。
 
-原生postMessage没有传输量的限制（至少没有查到任何资料说明有这个限制），使用模拟的 window.name 传输信息，有人测试传输量上限是 3M，即长达 3 \* 1024 \* 1024 字节，足够日常使用了。但是，当你尝试传输一个超大对象（序列化后的字符串）时，请务必确认在 IE67 下的实际效果是否正确。
+所以：
+
+- **限制组件使用场景为 iframe**。如果你要兼容 IE 的话；
+- **模拟的postMessage有时间延迟**。window.name的设置、读取都是定时器轮询处理的。所以消息的发送以及接收都会存在一定延迟，尽管这个延迟并不大(`<=20ms`)；
+- **模拟的postMessage有传输量限制**。使用模拟的 window.name 传输信息，有人测试传输量上限是 3M，即长达 3 \* 1024 \* 1024 字节，足够日常使用了。但是，当你尝试传输一个超大对象（序列化后的字符串）时，请务必确认在 IE67 下的实际效果是否正确。
