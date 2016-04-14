@@ -45,16 +45,16 @@
 
 <body>
     <script>
-    document.write('<h1>当前地址 (' +
-        ('postMessage' in window ? "支持" : "不支持") + 'postMessage)：</h1><h2>' +
+    document.write('<h1>current url (' +
+        ('postMessage' in window ? "" : "not ") + 'support postMessage): </h1><h2>' +
         document.URL + '</h2>')
     </script>
     <input id="msg" placeholder="请输入要发送的消息" />
-    <button onclick="sendMsg()">发送</button>
-    <button onclick="sendMsg(true)">发送JSON</button>
+    <button onclick="sendMsg()">Send</button>
+    <button onclick="sendMsg(true)">Send JSON</button>
     <div id="result">&nbsp;<br>&nbsp;</div>
     <br>
-    <div style="color:#aaa">请配置 test.cross.domain 域名的host以加载iframe页面</div>
+    <div style="color:#aaa">please set <b>test.cross.domain</b> 'host to your localhost.</div>
     <iframe id="iframeA" src="http://test.cross.domain/test/iframe.html" id="iframe" frameborder="0"></iframe>
 </body>
 
